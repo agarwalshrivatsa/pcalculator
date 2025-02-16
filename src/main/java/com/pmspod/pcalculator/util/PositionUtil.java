@@ -1,5 +1,6 @@
 package com.pmspod.pcalculator.util;
 
+import com.pmspod.pcalculator.dto.MarketDataDto;
 import com.pmspod.pcalculator.dto.PositionDto;
 import com.pmspod.pcalculator.dto.TradeDto;
 import com.pmspod.pcalculator.enums.OrderType;
@@ -47,20 +48,85 @@ public class PositionUtil {
     }
 
     public static String getNewAvgPrice(PositionDto existingPosition, TradeDto trade){
+
+        /*
+        if new total qty is positive
+            trade type = buy:
+                if oldPrice is positive, do normal calculation
+                else newQty- oldQty * newPrice
+            trade type = sell:
+                return oldPrice
+        else if new total qty is negative t
+            trade type = sell
+                if oldPrice is negative, do normal calculation
+                else newQty - oldQty * newPrice
+            trade type = buy:
+                return oldPrice
+        else
+            return 0
+
+
+         */
         BigDecimal oldQty = new BigDecimal(existingPosition.getTotalQty());
         OrderType orderType = OrderType.valueOf(trade.getOrderType());
-
-        if(orderType.equals(OrderType.SELL)){
-            return oldQty.setScale(4, RoundingMode.HALF_UP).toString();
-        }
         BigDecimal tradeQty = new BigDecimal(trade.getQuantity());
         BigDecimal oldPrice = new BigDecimal(existingPosition.getAvgPrice());
         BigDecimal newPrice = new BigDecimal(trade.getPrice());
 
         BigDecimal totalQty = getTotalQtyDecimal(oldQty, tradeQty, orderType);
-        if(totalQty.compareTo(new BigDecimal(0)) == 0) return "0.0000";
-        BigDecimal result = (oldPrice.multiply(oldQty).add(newPrice.multiply(tradeQty))).divide(oldQty.add(tradeQty), MATH_CONTEXT);
-        return result.setScale(4, RoundingMode.HALF_UP).toString();
+        BigDecimal result = new BigDecimal(0);
+        System.out.println("Old qty: " + oldQty.toString() + " orderType: "  + orderType.toString()+ " newQty: " +tradeQty.toString() + " Total qty: " +  totalQty.toString());
+        if(totalQty.compareTo(BigDecimal.ZERO) > 0){
+            if(orderType.equals(OrderType.BUY)){
+                if(oldQty.compareTo(BigDecimal.ZERO) >= 0){
+                    result = (oldPrice.multiply(oldQty).add(newPrice.multiply(tradeQty))).divide(oldQty.add(tradeQty), MATH_CONTEXT);
+                }
+                else {
+                    result = newPrice;
+                }
+            }
+            else{
+                result = oldPrice;
+            }
+        }
+        else if(totalQty.compareTo(BigDecimal.ZERO) < 0){
+            if(orderType.equals(OrderType.SELL)){
+                if(oldQty.compareTo(BigDecimal.ZERO) <= 0){
+                    result = (oldPrice.multiply(oldQty).subtract(newPrice.multiply(tradeQty))).divide(oldQty.subtract(tradeQty), MATH_CONTEXT);
+                }
+                else{
+                    result = newPrice;
+                }
+
+            }
+            else{
+                result = oldPrice;
+            }
+
+        }
+        return result.abs().setScale(4, RoundingMode.HALF_UP).toString();
+
     }
+
+    public static String getUnrealizedPnL(PositionDto positionDto, MarketDataDto md){
+
+        BigDecimal avgPrice = new BigDecimal(positionDto.getAvgPrice());
+        BigDecimal totalQty = new BigDecimal(positionDto.getTotalQty());
+
+        BigDecimal netPosition = avgPrice.multiply(totalQty);
+
+        BigDecimal curPrice = BigDecimal.valueOf(md.getTradePrice());
+
+        BigDecimal uPnl =  new BigDecimal(0);
+
+        uPnl = netPosition.subtract(totalQty.multiply(curPrice));
+        if(netPosition.compareTo(BigDecimal.ZERO) < 0){
+            uPnl = uPnl.multiply(new BigDecimal(-1));
+        }
+
+        return uPnl.setScale(4, RoundingMode.HALF_UP).toString();
+
+    }
+
 
 }

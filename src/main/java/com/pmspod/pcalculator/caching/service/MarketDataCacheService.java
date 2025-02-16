@@ -4,7 +4,7 @@ import com.pmspod.pcalculator.dto.MarketDataDto;
 
 public interface MarketDataCacheService {
 
-    void updateMarketData(String symbol, MarketDataDto marketDataDto);
+    MarketDataDto updateMarketData(String symbol, MarketDataDto marketDataDto);
 
     MarketDataDto getMarketData(String symbol);
 }

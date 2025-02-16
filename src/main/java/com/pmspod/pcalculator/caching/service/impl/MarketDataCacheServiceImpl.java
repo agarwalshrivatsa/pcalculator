@@ -2,7 +2,6 @@ package com.pmspod.pcalculator.caching.service.impl;
 
 import com.pmspod.pcalculator.caching.service.MarketDataCacheService;
 import com.pmspod.pcalculator.dto.MarketDataDto;
-import com.pmspod.pcalculator.dto.PositionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
@@ -17,8 +16,8 @@ public class MarketDataCacheServiceImpl implements MarketDataCacheService {
 
     @Override
     @CachePut(value = "marketData", key = "#symbol")
-    public void updateMarketData(String symbol, MarketDataDto marketDataDto) {
-
+    public MarketDataDto updateMarketData(String symbol, MarketDataDto marketDataDto) {
+        return marketDataDto;
     }
 
     @Override

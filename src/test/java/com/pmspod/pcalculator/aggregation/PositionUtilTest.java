@@ -5,6 +5,8 @@ import com.pmspod.pcalculator.dto.TradeDto;
 import com.pmspod.pcalculator.util.PositionUtil;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PositionUtilTest {
@@ -105,7 +107,53 @@ public class PositionUtilTest {
 
         String result = PositionUtil.getNewAvgPrice(existingPosition, trade);
 
+        assertEquals("100.0000", result);
+    }
+
+    @Test
+    public void testGetNewAvgPrice_whenOldQtyIsNegAndTradeTypeSell(){
+        PositionDto existingPosition = new PositionDto();
+        existingPosition.setPositionId("1");
+        existingPosition.setAvgPrice("100.0");
+        existingPosition.setCurrency("USD");
+        existingPosition.setLastPrice("100.0");
+        existingPosition.setTicker("AAPL");
+        existingPosition.setTotalQty("-100.0");
+
+        TradeDto trade = new TradeDto();
+        trade.setCurrency("USD");
+        trade.setOrderType("SELL");
+        trade.setPrice("200.0");
+        trade.setQuantity("100.0");
+        trade.setTicker("AAPL");
+
+        String result = PositionUtil.getNewAvgPrice(existingPosition, trade);
+
+        assertEquals("150.0000", result);
+
+    }
+
+    @Test
+    public void testGetNewAvgPrice_whenOldQtyIsPosAndNewQtyNeg(){
+        PositionDto existingPosition = new PositionDto();
+        existingPosition.setPositionId("1");
+        existingPosition.setAvgPrice("100.0");
+        existingPosition.setCurrency("USD");
+        existingPosition.setLastPrice("100.0");
+        existingPosition.setTicker("AAPL");
+        existingPosition.setTotalQty("100.0");
+
+        TradeDto trade = new TradeDto();
+        trade.setCurrency("USD");
+        trade.setOrderType("SELL");
+        trade.setPrice("200.0");
+        trade.setQuantity("200.0");
+        trade.setTicker("AAPL");
+
+        String result = PositionUtil.getNewAvgPrice(existingPosition, trade);
+
         assertEquals("200.0000", result);
+
     }
 
 
