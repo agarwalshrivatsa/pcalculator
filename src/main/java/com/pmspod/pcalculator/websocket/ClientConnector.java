@@ -20,10 +20,27 @@ public class ClientConnector implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        log.info("executing application runner for initializing MDS connection");
-        stompClient.connectAsync("ws://localhost:8080/portfolio", sessionHandler)
-                .thenAccept((session) -> {
-                    log.info("Connected to MDS, session ID: " + session.getSessionId());
-                });
+        int maxRetries = 10;
+        int retry = 0;
+        boolean connected = false;
+
+        while (!connected && retry < maxRetries) {
+            try {
+                log.info("Attempting to connect to MDS (Attempt {}/{})", retry + 1, maxRetries);
+                stompClient.connectAsync("ws://mds:8080/portfolio", sessionHandler)
+                        .thenAccept((session) -> {
+                            log.info("Connected to MDS, session ID: " + session.getSessionId());
+                        });
+                connected = true;
+            } catch (Exception e) {
+                log.error("Error connecting to MDS, retrying in 5 seconds", e);
+                Thread.sleep(5000);
+                retry++;
+            }
+        }
+        
+        if (!connected) {
+            log.error("Failed to connect to MDS after {} attempts", maxRetries);
+        }
     }
 }
