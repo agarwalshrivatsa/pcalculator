@@ -12,4 +12,9 @@ public class PositionDto {
     private String unrealizedPnl;
     private String lastPrice;
     private String positionId;
+    
+    private String dailyRealizedPnl;
+    private String dailyUnrealizedPnl;
+    private String ytdPnl;              // Year-to-date PnL
+    private String itdPnl;
 }
