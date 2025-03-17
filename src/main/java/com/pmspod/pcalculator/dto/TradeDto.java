@@ -25,4 +25,8 @@ public class TradeDto {
 
     private String currency;
 
+    private String accountId;
+
+    private String positionId;
+
 }

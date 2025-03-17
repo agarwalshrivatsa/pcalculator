@@ -33,7 +33,7 @@ public class TradeProcessingServiceImpl implements TradeProcessingService {
 
         if(tradeList != null) {
             for (TradeDto trade : tradeList) {
-                PositionDto position = getExistingPosition(trade.getTicker());
+                PositionDto position = getExistingPosition(trade.getAccountId(), trade.getTicker());
                 if (position == null) {
                     createPosition(trade);
                 } else {
@@ -46,20 +46,20 @@ public class TradeProcessingServiceImpl implements TradeProcessingService {
 
     }
 
-    private PositionDto getExistingPosition(String ticker){
-        return positionCacheService.getPositionByTicker(ticker);
+    private PositionDto getExistingPosition(String accountId, String ticker){
+        return positionCacheService.getPositionByTicker(accountId, ticker);
     }
 
     private void createPosition(TradeDto trade){
         PositionDto position = PositionUtil.getPositionFromTrade(trade);
-        positionCacheService.updatePosition(trade.getTicker(), position);
+        positionCacheService.updatePosition(trade.getAccountId(), trade.getTicker(), position);
         log.info("Created new position for trade: {}", trade );
     }
 
 
     private void updatePosition(TradeDto tradeDto, PositionDto position){
         PositionDto newPosition = PositionUtil.getNewPosition(position, tradeDto);
-        positionCacheService.updatePosition(tradeDto.getTicker(), newPosition);
+        positionCacheService.updatePosition(tradeDto.getAccountId(), tradeDto.getTicker(), newPosition);
         log.info("Updated existing position for trade: {}", tradeDto);
     }
 

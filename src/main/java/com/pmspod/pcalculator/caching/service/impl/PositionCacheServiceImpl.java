@@ -20,7 +20,7 @@ public class PositionCacheServiceImpl implements PositionCacheService {
     private CacheManager cacheManager;
 
     @Override
-    public PositionDto getPositionByTicker(String ticker) {
+    public PositionDto getPositionByTicker(String accountId, String ticker) {
         Cache cache = cacheManager.getCache("positions");
         if(cache != null) {
             return cache.get(ticker, PositionDto.class);
@@ -30,7 +30,7 @@ public class PositionCacheServiceImpl implements PositionCacheService {
 
     @Override
     @CachePut(value = "positions", key = "#ticker")
-    public PositionDto updatePosition(String ticker, PositionDto position) {
+    public PositionDto updatePosition(String accountId, String ticker, PositionDto position) {
         return position;
     }
 

@@ -8,9 +8,9 @@ import java.util.List;
 @Service
 public interface PositionCacheService {
 
-    public PositionDto getPositionByTicker(String ticker);
+    public PositionDto getPositionByTicker(String accountId, String ticker);
 
-    public PositionDto updatePosition(String ticker, PositionDto position);
+    public PositionDto updatePosition(String accountId, String ticker, PositionDto position);
 
     public List<PositionDto> getAllPositions();
 }

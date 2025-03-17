@@ -118,8 +118,8 @@ public class PositionUtil {
         BigDecimal curPrice = BigDecimal.valueOf(md.getTradePrice());
 
         BigDecimal uPnl =  new BigDecimal(0);
-
-        uPnl = netPosition.subtract(totalQty.multiply(curPrice));
+        BigDecimal newPosition = totalQty.multiply(curPrice);
+        uPnl = newPosition.subtract(netPosition);
         if(netPosition.compareTo(BigDecimal.ZERO) < 0){
             uPnl = uPnl.multiply(new BigDecimal(-1));
         }

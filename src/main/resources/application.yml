@@ -3,15 +3,15 @@ server:
 spring:
   application.name: pcalculator
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+    url: jdbc:mysql://localhost:3306/pms
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 10RelationalDatabasesAreVeryUseful!
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
-    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
