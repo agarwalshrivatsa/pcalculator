@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.pmspod</groupId>
-	<artifactId>tprocessor</artifactId>
+	<artifactId>pcalculator</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>tprocessor</name>
-	<description>Trade Processor</description>
+	<name>pcalculator</name>
+	<description>Listens to trade data and calculates position</description>
 	<properties>
 		<java.version>17</java.version>
 		<jacoco.version>0.8.10</jacoco.version>
@@ -50,6 +50,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -95,7 +99,7 @@
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>prepare-package</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
