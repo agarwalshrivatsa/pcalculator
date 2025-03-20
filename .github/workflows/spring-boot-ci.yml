@@ -26,19 +26,9 @@ jobs:
       - name: Make mvnw executable
         run: chmod +x ./mvnw
 
-      - name: Build with Maven
+      - name: Build with Maven including tests and JaCoCo
         run: ./mvnw -B clean verify
         continue-on-error: true
-
-      - name: Run Tests
-        run: ./mvnw test
-        continue-on-error: true
-
-      - name: Generate JaCoCo Report
-        run: ./mvnw jacoco:report
-        continue-on-error: true
-
-      # Remove the test results publisher completely
 
       - name: Check code coverage
         id: jacoco
@@ -64,10 +54,6 @@ jobs:
 
       - name: SpotBugs
         run: ./mvnw spotbugs:check
-        continue-on-error: true
-
-      - name: Build package
-        run: ./mvnw -B package -DskipTests
         continue-on-error: true
 
       - name: Upload build artifact
