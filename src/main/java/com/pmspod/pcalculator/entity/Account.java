@@ -1,29 +1,34 @@
 package com.pmspod.pcalculator.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
+@Data
+@Table(name = "accounts")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Account {
-
     @Id
-    @Column(name = "account_id")
-    private String accountId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(updatable = false, nullable = false)
+    private UUID id;
 
-    @Column(name = "department_name")
+    @Column(nullable = false, unique = true)
+    private String accountName;
+
+    @Column(nullable = false)
     private String departmentName;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "accountId")
-    private List<Trade> trades;
-
 }
+

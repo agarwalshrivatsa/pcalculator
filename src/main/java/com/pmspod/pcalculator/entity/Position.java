@@ -21,7 +21,7 @@ public class Position {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private String accountId;
+    private Account account;
 
     @Column(name = "daily_pnl")
     private String dailyPnl;

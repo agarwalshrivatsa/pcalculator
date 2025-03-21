@@ -1,6 +1,7 @@
 package com.pmspod.pcalculator.caching.config;
 
 import com.pmspod.pcalculator.dto.PositionDto;
+import com.pmspod.pcalculator.util.PositionDtoSerializer;
 import net.openhft.chronicle.map.ChronicleMap;
 import net.openhft.chronicle.map.ChronicleMapBuilder;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,7 @@ public class ChronicleMapConfig {
                 .entries(100)
                 .averageKeySize(90)
                 .averageValueSize(500)
+//                .valueMarshaller(new PositionDtoSerializer())
                 .createOrRecoverPersistedTo(file);
     }
 }

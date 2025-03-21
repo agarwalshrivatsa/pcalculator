@@ -5,10 +5,12 @@ import com.pmspod.pcalculator.dto.PositionDto;
 import lombok.extern.slf4j.Slf4j;
 import net.openhft.chronicle.map.ChronicleMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+@Service
 @Slf4j
 public class PositionCacheServiceImpl2 implements PositionCacheService {
 
@@ -36,11 +38,27 @@ public class PositionCacheServiceImpl2 implements PositionCacheService {
 
     @Override
     public PositionDto updatePosition(String accountId, String ticker, PositionDto position) {
-        return null;
+        rwLock.writeLock().lock();
+        try{
+            positionChronicleMap.put(getKey(accountId, ticker), position);
+            return position;
+        } catch (Exception e){
+            log.error("Error in updating position in map!");
+            throw new RuntimeException("Error in updating position in map: {}", e);
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+
     }
 
     @Override
     public List<PositionDto> getAllPositions() {
-        return List.of();
+
+        rwLock.readLock().lock();
+        try{
+            return List.copyOf(positionChronicleMap.values());
+        } finally {
+            rwLock.readLock().unlock();
+        }
     }
 }

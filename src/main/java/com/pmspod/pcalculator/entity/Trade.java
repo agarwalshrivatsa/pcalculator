@@ -3,6 +3,8 @@ package com.pmspod.pcalculator.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Data
 public class Trade {
@@ -21,9 +23,9 @@ public class Trade {
     @Column(name = "ticker")
     private String ticker;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private String accountId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
     @Column(name = "order_type")
     private String orderType;
@@ -39,5 +41,8 @@ public class Trade {
 
     @Column(name = "exchange")
     private String exchange;
+
+    @Column(name = "position_id")
+    private UUID positionId;
 
 }
